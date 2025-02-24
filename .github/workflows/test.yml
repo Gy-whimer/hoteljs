@@ -9,6 +9,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Set MONGO_URI environment variable
+        run: echo "MONGO_URI=mongodb://localhost:27017/hotel_booking_test" >> $GITHUB_ENV
 
       - name: Run tests
         run: npm test

@@ -13,6 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+ENV MONGO_URI=mongodb://mongo:27017/hotel_booking_test
+
 # Expose the port the app runs on
 EXPOSE 3000
 
